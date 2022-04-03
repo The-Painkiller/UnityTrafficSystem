@@ -10,6 +10,6 @@ public class VehicleConfiguration : ScriptableObject
     public float Acceleration = 70f;
     public float AngularSpeed = 200f;
     public float SpeedSwitchTimeStep = 0.1f;
-    public float SpeedSwitchTresholdDistance = 1f;
+    public float TurningPointDistance = 1f;
 
 }

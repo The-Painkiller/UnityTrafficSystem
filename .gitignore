@@ -2,3 +2,8 @@
 .vsconfig
 .vs/UnityTrafficSystem/v16/.suo
 Library/
+Logs/
+Temp/
+obj/
+UserSettings/
+*.csproj

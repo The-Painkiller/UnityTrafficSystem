@@ -13,7 +13,7 @@ public class Vehicle : MonoBehaviour
     private float _movementSpeed = 10f;
     private float _turningSpeed = 5f;
     private float _speedSwitchTimeIncrement = 0.1f;
-    private float _speedSwitchTresholdDistance = 1f;
+    private float _turningPointDistance = 1f;
 
     private Vector3 _currentDestination = Vector3.zero;
 
@@ -33,8 +33,6 @@ public class Vehicle : MonoBehaviour
     private Waypoint _previousWaypoint = null;
     private Waypoint _nextWaypoint = null;
 
-    private bool _switchSpeed = false;
-
     private void Awake()
     {
         _transform = transform;
@@ -52,7 +50,7 @@ public class Vehicle : MonoBehaviour
         _movementSpeed = _vehicleConfig.NormalMovementSpeed;
         _turningSpeed = _vehicleConfig.TurningSpeed;
         _speedSwitchTimeIncrement = _vehicleConfig.SpeedSwitchTimeStep;
-        _speedSwitchTresholdDistance = _vehicleConfig.SpeedSwitchTresholdDistance;
+        _turningPointDistance = _vehicleConfig.TurningPointDistance;
         _navMeshAgent.acceleration = _vehicleConfig.Acceleration;
         _navMeshAgent.angularSpeed = _vehicleConfig.AngularSpeed;
     }
@@ -76,6 +74,24 @@ public class Vehicle : MonoBehaviour
     private void DriveToNextPoint()
     {
         _currentWaypointIndex++;
+        if (_currentWaypointIndex >= _totalPathLength || _currentWaypoint == null)
+        {
+            _navMeshAgent.autoBraking = true;
+            _navMeshAgent.isStopped = true;
+            return;
+        }
+
+        _previousWaypoint = _currentWaypoint;
+        _currentWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex);
+        _nextWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex + 1);
+
+        _newSpeed = _movementSpeed;
+        DriveToDestination(_currentWaypoint.Position);
+    }
+
+    private void DriveToNextPoint(int x)
+    {
+        _currentWaypointIndex++;
         if (_currentWaypointIndex >= _totalPathLength)
         {
             _navMeshAgent.autoBraking = true;
@@ -95,15 +111,10 @@ public class Vehicle : MonoBehaviour
 
         _currentWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex);
 
-        if (_currentWaypoint && _previousWaypoint && _nextWaypoint)
+        if(!_navMeshAgent.speed.IsEqualTo(_movementSpeed))
         {
-            float angle = Vector3.Angle(_currentWaypoint.Position - _previousWaypoint.Position, _currentWaypoint.Position - _nextWaypoint.Position);
-
-            Debug.Log("Angle: " + angle);
-
-            _newSpeed = angle >= 35f && angle <= 145f ? _turningSpeed : _movementSpeed;
-            Debug.Log(_newSpeed);
-            SwitchSpeed();
+            _newSpeed = _movementSpeed;
+            SpeedSwitch();
         }
 
         DriveToDestination(_waypointManager.GetPositionAtIndex(_currentWaypointIndex));
@@ -115,45 +126,43 @@ public class Vehicle : MonoBehaviour
         _navMeshAgent.SetDestination(_currentDestination);
     }
 
-
     private void FixedUpdate()
-    {
-        if (_switchSpeed)
-            SwitchSpeed();
-    }
-
-    private void Update()
     {
         if (!_isActiveOnPath)
             return;
 
-        if (AreEqual(_transform.localPosition, _currentDestination))
+        SpeedSwitch();
+
+        if (Vector3.Distance(_transform.position, _currentDestination) < _turningPointDistance)
+        {
+            HandleTurning();
+        }
+
+        if (_transform.position.IsEqualTo(_currentDestination))
         {
             DriveToNextPoint();
         }
     }
 
-    private void SwitchSpeed()
+    private void SpeedSwitch()
     {
-        if (AreEqual(_navMeshAgent.speed, _newSpeed))
-        {
-            Debug.Log("Speed Switch Complete.");
-            _switchSpeed = false;
+        if (_navMeshAgent.speed.IsEqualTo(_newSpeed))
             return;
-        }
 
-        Debug.Log("Switching Speed: " + _navMeshAgent.speed);
-        _switchSpeed = true;
         _navMeshAgent.speed = Mathf.Lerp(_navMeshAgent.speed, _newSpeed, _speedSwitchTimeIncrement);
+        Debug.Log("Switching Speed: " + _navMeshAgent.speed);
     }
 
-    private bool AreEqual(float a, float b)
+    private void HandleTurning()
     {
-        return Mathf.Approximately(a, b);
-    }
+        if (_nextWaypoint == null)
+            return;
 
-    private bool AreEqual(Vector3 a, Vector3 b)
-    {
-        return Vector3.Distance(a, b) <= 1.5f;
+        float angle = Vector3.Angle(_currentWaypoint.Position - _previousWaypoint.Position, _currentWaypoint.Position - _nextWaypoint.Position);
+
+        if (angle >= 35f && angle <= 145f)
+        {
+            _newSpeed = _turningSpeed;
+        }
     }
 }
