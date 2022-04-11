@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eccef313d8edd4f43875658ff90474f7, type: 3}
-  m_Name: CarConfiguration01 1
+  m_Name: CarConfiguration02
   m_EditorClassIdentifier: 
-  NormalMovementSpeed: 50
+  NormalMovementSpeed: 40
   TurningSpeed: 10
   Acceleration: 70
-  AngularSpeed: 200
+  AngularSpeed: 250
   SpeedSwitchTimeStep: 0.3
   TurningPointDistance: 20

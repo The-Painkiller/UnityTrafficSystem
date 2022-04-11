@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEditor;
 public class Waypoint : MonoBehaviour
 {
     private Transform _transform = null;
@@ -8,7 +8,9 @@ public class Waypoint : MonoBehaviour
 
 #if UNITY_EDITOR
     [SerializeField]
-    private Color _GizmoColor = Color.yellow;
+    private Color _gizmoColor = Color.yellow;
+
+    private static bool _displayObjectName = false;
 #endif
 
     private void Awake()
@@ -20,8 +22,16 @@ public class Waypoint : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = _GizmoColor;
+        Gizmos.color = _gizmoColor;
         Gizmos.DrawSphere(transform.position, 1f);
+
+        if(_displayObjectName)
+            UnityEditor.Handles.Label(transform.position, gameObject.name, UnityEditor.EditorStyles.boldLabel);
+    }
+
+    public static void ToggleEditorOptions(bool toggle)
+    {
+        _displayObjectName = toggle;
     }
 
 #endif

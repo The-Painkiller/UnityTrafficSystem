@@ -1,0 +1,16 @@
+{
+    "name": "TrafficSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:038434136e859f94babe66c9b8201e38"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

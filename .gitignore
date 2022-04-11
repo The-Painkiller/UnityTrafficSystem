@@ -7,3 +7,6 @@ Temp/
 obj/
 UserSettings/
 *.csproj
+*.sln
+UnityTrafficSystem.sln
+*.dwlt
