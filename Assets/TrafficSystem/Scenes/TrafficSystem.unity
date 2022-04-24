@@ -2968,14 +2968,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paths:
   - Waypoints:
-    - {fileID: 1900689098}
-    - {fileID: 720513379}
-    - {fileID: 130122836}
-    - {fileID: 925877134}
-    - {fileID: 711232138}
-    - {fileID: 1823898429}
-    - {fileID: 398258967}
-  - Waypoints:
     - {fileID: 1589106219}
     - {fileID: 477254992}
     - {fileID: 951793905}
@@ -2987,6 +2979,18 @@ MonoBehaviour:
     - {fileID: 213527271}
     - {fileID: 1870883607}
     - {fileID: 1881154761}
+  - Waypoints:
+    - {fileID: 1169516837}
+    - {fileID: 2041594303}
+    - {fileID: 1763306125}
+  - Waypoints:
+    - {fileID: 1900689098}
+    - {fileID: 720513379}
+    - {fileID: 130122836}
+    - {fileID: 925877134}
+    - {fileID: 711232138}
+    - {fileID: 1823898429}
+    - {fileID: 398258967}
 --- !u!4 &213329981
 Transform:
   m_ObjectHideFlags: 0
@@ -6672,7 +6676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1131572103255178290, guid: ffadbaff8e0169d4dac293c868210e84, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffadbaff8e0169d4dac293c868210e84, type: 3}

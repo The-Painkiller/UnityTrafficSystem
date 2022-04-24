@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System;
 
 public class WaypointPathCreator : EditorWindow
 {
     private PathsManager _pathsManager = null;
 
+    private GameObject _currentSelectedGameObject = null;
+    private Waypoint _currentSelectedWaypoint = null;
     private Waypoint[] _waypointsInCurrentScene = null;
     private string[] _waypointsInCurrentSceneNames = null;
 
@@ -55,15 +58,25 @@ public class WaypointPathCreator : EditorWindow
         _chosenWaypointsIndexes.Clear();
     }
 
+    private void Update()
+    {
+        _currentSelectedGameObject = Selection.activeGameObject;
+        if (_currentSelectedGameObject == null)
+            return;
+
+        _currentSelectedWaypoint = _currentSelectedGameObject.GetComponent<Waypoint>();
+    }
+
     private void OnGUI()
     {
         if (_chosenWaypointsIndexes == null)
             return;
-
+              
         GUILayout.Space(SPACE_SIZE_SMALL);
 
         if (_chosenWaypointsIndexes.Count == 0)
         {
+            AddSelection();
             if (AddWaypointButton())
             {
                 _chosenWaypointsIndexes.Add(-1);
@@ -90,6 +103,8 @@ public class WaypointPathCreator : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
+        AddSelection();
+
         GUILayout.Space(SPACE_SIZE_LARGE);
 
         if (GUILayout.Button("Create Path", GUILayout.MaxWidth(FIELD_SIZE_MEDIUM)))
@@ -101,6 +116,22 @@ public class WaypointPathCreator : EditorWindow
             }
 
             _pathsManager.CreatePathFromSelectedWaypoints(waypoints);
+        }
+    }
+
+    private void AddSelection()
+    {
+        if (_currentSelectedWaypoint != null)
+        {
+            GUILayout.Space(SPACE_SIZE_SMALL);
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Selected", _currentSelectedWaypoint.name);
+            if (GUILayout.Button("Add Selection"))
+            {
+                _chosenWaypointsIndexes.Add(Array.IndexOf(_waypointsInCurrentScene, _currentSelectedWaypoint));
+            }
+            EditorGUILayout.EndHorizontal();
         }
     }
 

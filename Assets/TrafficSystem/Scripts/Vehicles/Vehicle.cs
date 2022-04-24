@@ -150,7 +150,7 @@ public class Vehicle : MonoBehaviour
             return;
 
         _navMeshAgent.speed = Mathf.Lerp(_navMeshAgent.speed, _newSpeed, _speedSwitchTimeIncrement);
-        Debug.Log("Switching Speed: " + _navMeshAgent.speed);
+        //Debug.Log("Switching Speed: " + _navMeshAgent.speed);
     }
 
     private void HandleTurning()
