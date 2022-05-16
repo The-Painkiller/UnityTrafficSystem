@@ -27,31 +27,4 @@ public class RenameWaypoints : Editor
             _objects[i].name = "Waypoint" + i.ToString();
         }
     }
-
-    [MenuItem("Traffic System/Create New Path With Selection")]
-    public static void CreatePath()
-    {
-        if (_pathsManager == null)
-        {
-            _pathsManager = FindObjectOfType<PathsManager>();
-            if (_pathsManager == null)
-                return;
-        }
-
-        GameObject[] gameObjects = Selection.gameObjects;
-        if (gameObjects == null || gameObjects.Length == 0)
-            return;
-
-        List<Waypoint> waypoints = new List<Waypoint>();
-        for (int i = 0; i < gameObjects.Length; i++)
-        {
-            Waypoint waypoint = gameObjects[i].GetComponent<Waypoint>();
-            if (waypoint == null)
-                continue;
-
-            waypoints.Add(waypoint);
-        }
-
-        _pathsManager.CreatePathFromSelectedWaypoints(waypoints.ToArray());
-    }
 }
