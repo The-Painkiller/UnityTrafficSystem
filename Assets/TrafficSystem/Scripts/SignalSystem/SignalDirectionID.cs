@@ -1,8 +1,11 @@
 public enum SignalDirectionID
 {
     None,
-    North,
-    East,
-    South,
-    West
+    Forward,
+    Left, 
+    Right
+    //North,
+    //East,
+    //South,
+    //West
 }
