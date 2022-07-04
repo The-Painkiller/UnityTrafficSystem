@@ -13,6 +13,8 @@ public class TrafficSignalController : MonoBehaviour
     private TrafficSignalView _view;
     private TrafficSignalModel _model;
 
+    private bool _signalLocked = false;
+
     private void Awake()
     {
         _view = GetComponent<TrafficSignalView>();
@@ -26,29 +28,56 @@ public class TrafficSignalController : MonoBehaviour
 
         _model = new TrafficSignalModel(_supportedDirections, _intervalPerSignal);
 
-        SwitchSignal(TrafficSignalStateID.Red);
+        ResetToRedImmediate();
+    }
+
+    private IEnumerator ChangeSignal(TrafficSignalStateID targetSignalState, SignalDirectionID[] directions = null)
+    {
+        _signalLocked = true;
+        _model.CurrentSignalState = TrafficSignalStateID.Yellow;
+        _view.SwitchSignal(TrafficSignalStateID.Yellow);
+        
+        yield return new WaitForSeconds(0.5f);
+        
+        _model.CurrentSignalState = targetSignalState;
+        _model.CurrentActiveDirections = directions;
+        
+        switch (targetSignalState)
+        {
+            case TrafficSignalStateID.Red:
+            case TrafficSignalStateID.Yellow:
+                _view.SwitchSignal(targetSignalState);
+                break;
+
+            case TrafficSignalStateID.Green:
+                _view.SwitchSignal(targetSignalState, directions);
+                break;
+        }
+
+        _signalLocked = false;
+    }
+
+    private void ResetToRedImmediate()
+    {
+        _model.CurrentActiveDirections = null;
+        _model.CurrentSignalState = TrafficSignalStateID.Red;
+        _view.SwitchSignal(TrafficSignalStateID.Red);
     }
 
     public void SwitchSignal(TrafficSignalStateID signalState, SignalDirectionID [] direction  = null)
     {
-        if (_model.CurrentSignalState == signalState)
+        if (_model.CurrentSignalState == signalState && _model.CurrentActiveDirections == direction)
+            return;
+
+        if (_signalLocked)
             return;
 
         _model.CurrentSignalState = signalState;
         _model.CurrentActiveDirections = direction;
 
-        switch (signalState)
-        {
-            case TrafficSignalStateID.Red:
-            case TrafficSignalStateID.Yellow:
-                _view.SwitchSignal(signalState);
-                break;
-
-            case TrafficSignalStateID.Green:
-                _view.SwitchSignal(signalState, direction);
-                break;
-        }
+        StartCoroutine(ChangeSignal(signalState, direction));
     }
+
 
     public TrafficSignalStateID CurrentSignalState()
     {
