@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eccef313d8edd4f43875658ff90474f7, type: 3}
   m_Name: CarConfiguration01
   m_EditorClassIdentifier: 
-  NormalMovementSpeed: 50
-  TurningSpeed: 15
-  Acceleration: 100
-  AngularSpeed: 200
-  SpeedSwitchTimeStep: 0.3
-  TurningPointDistance: 15
+  NormalMovementSpeed: 12
+  TurningSpeed: 6
+  Acceleration: 21
+  AngularSpeed: 125
+  SpeedSwitchTimeStep: 0.1
+  TurningPointDistance: 10
