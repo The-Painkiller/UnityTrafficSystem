@@ -1,20 +1,23 @@
 using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections.Generic;
 
 public class TrafficSignalCreator : EditorWindow
 {
-    private const float WINDOW_WIDTH = 800f;
+    private const float WINDOW_WIDTH = 500f;
     private const float WINDOW_HEIGHT = 600f;
 
     private static SignalManager _currentSignalManager = null;
 
     private SerializedObject _serializedSignalManager;
+    private SerializedObject _serializedSignalDirections;
     private SerializedProperty _serializedSignalsArray;
     private SerializedProperty _serializedTimeBoxedSignalsList;
+    private SerializedProperty _serializedSignalDirectionsArray;
+
+    private Vector2 _globalScrollPosition = Vector2.zero;
     private Vector2 _timeboxScrollPosition = Vector2.zero;
-    private int? _numberOfTimeBoxes = 0;
+
+    private GUIStyle _verticalLine = new GUIStyle();
 
     [MenuItem("Traffic System/Traffic Signal Creator")]
     public static void Initialize()
@@ -23,6 +26,13 @@ public class TrafficSignalCreator : EditorWindow
 
         window.position = new Rect(Screen.width / 2f, Screen.height / 2f, WINDOW_WIDTH, WINDOW_HEIGHT);
         window.Show();
+    }
+
+    private void OnEnable()
+    {
+        _verticalLine.normal.background = EditorGUIUtility.whiteTexture;
+        _verticalLine.margin = new RectOffset(0, 0, 4, 4);
+        _verticalLine.fixedWidth = 1;
     }
 
     private void OnGUI()
@@ -56,22 +66,31 @@ public class TrafficSignalCreator : EditorWindow
         }
 
         GUILayout.Space(EditorUtils.SPACE_SIZE_LARGE);
+
+        EditorGUI.indentLevel += 2;
+        _globalScrollPosition = EditorGUILayout.BeginScrollView(_globalScrollPosition);
         DisplaySignalManager();
+        EditorGUILayout.EndScrollView();
+        EditorGUI.indentLevel -= 2;
     }
 
     private void DisplaySignalManager()
     {
-        EditorGUILayout.PropertyField(_serializedSignalsArray, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_LARGE));
-
-        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
-
         _currentSignalManager.IntervalPerSignalInSeconds = EditorGUILayout.IntField("Time Per Signal", _currentSignalManager.IntervalPerSignalInSeconds, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_MEDIUM));
 
         GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
 
+        EditorGUILayout.PropertyField(_serializedSignalsArray, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_LARGE));
+
+        GUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
+
+        EditorUtils.DrawHorizontalLine(Color.black);
+
+        GUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
+
         EditorGUILayout.BeginHorizontal();
 
-        EditorGUILayout.IntField("Number of Time Boxes", _currentSignalManager.TimeBoxedTrafficSignals.Count, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_MEDIUM));
+        EditorGUILayout.IntField("Time Boxes", _currentSignalManager.TimeBoxedTrafficSignals.Count, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_MEDIUM));
 
         if (GUILayout.Button("+", GUILayout.MaxWidth(EditorUtils.SPACE_SIZE_LARGE)))
         {
@@ -96,21 +115,35 @@ public class TrafficSignalCreator : EditorWindow
 
     private void DisplayTimeBoxes()
     {
-        EditorGUILayout.BeginHorizontal();
+        _timeboxScrollPosition = EditorGUILayout.BeginScrollView(_timeboxScrollPosition);
 
-        EditorGUILayout.BeginScrollView(_timeboxScrollPosition);
+        EditorUtils.DrawHorizontalLine(Color.gray, 400f);
 
-        for (int i = 0; i < _currentSignalManager.NumberOfTimeBoxes; i++)
+        for (int i = 0; i < _currentSignalManager.TimeBoxedTrafficSignals.Count; i++)
         {
-            EditorGUILayout.BeginVertical();
+            ////FIX THIS CONDITION. NOT REFLECTING PROPERLY!!
+            if (_currentSignalManager.TimeBoxedTrafficSignals[i].Signals == null || _currentSignalManager.TimeBoxedTrafficSignals[i].Signals.Length != _currentSignalManager.Signals.Length)
+            {
+                TrafficSignalsCollective trafficSignalsCollective = _currentSignalManager.TimeBoxedTrafficSignals[i];
 
+                trafficSignalsCollective.Signals = new SignalDirectionsCollective[_currentSignalManager.Signals.Length];
 
+                _currentSignalManager.TimeBoxedTrafficSignals[i] = trafficSignalsCollective;
 
-            EditorGUILayout.EndVertical();
+                Repaint();
+            }
+
+            EditorGUILayout.LabelField("Time Box " +  (i + 1));
+
+            _serializedSignalDirectionsArray = _serializedTimeBoxedSignalsList.GetArrayElementAtIndex(i).FindPropertyRelative("Signals");
+
+            EditorGUI.indentLevel += 2;
+            EditorGUILayout.PropertyField(_serializedSignalDirectionsArray, GUILayout.MaxWidth(400f));
+            EditorGUI.indentLevel -= 2;
+
+            EditorUtils.DrawHorizontalLine(Color.gray, 400f);
         }
 
         EditorGUILayout.EndScrollView();
-
-        EditorGUILayout.EndHorizontal();
     }
 }

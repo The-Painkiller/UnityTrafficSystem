@@ -36,14 +36,14 @@ public class SignalManager : MonoBehaviour
         for (int i = 0; i < Signals.Length; i++)
         {
             if (TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals == null
-                || TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections.Count == 0
+                || TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections.Length == 0
                 || TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections[0] == SignalDirectionID.None)
             {
                 Signals[i].SwitchSignal(TrafficSignalStateID.Red);
                 continue;
             }
 
-            Signals[i].SwitchSignal(TrafficSignalStateID.Green, TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections.ToArray());
+            Signals[i].SwitchSignal(TrafficSignalStateID.Green, TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections);
         }
 
         StartCoroutine(CycleTimeboxPostInterval());
@@ -82,11 +82,11 @@ public class SignalManager : MonoBehaviour
 public struct TrafficSignalsCollective
 {
     [SerializeField]
-    public List<SignalDirectionsCollective> Signals;
+    public SignalDirectionsCollective[] Signals;
 }
 
 [Serializable]
 public struct SignalDirectionsCollective
 {
-    public List<SignalDirectionID> CurrentDirections;
+    public SignalDirectionID[] CurrentDirections;
 }

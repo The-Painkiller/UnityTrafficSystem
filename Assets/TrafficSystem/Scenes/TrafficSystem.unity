@@ -16652,7 +16652,23 @@ MonoBehaviour:
   - {fileID: 2067496957}
   NumberOfTimeBoxes: 2
   IntervalPerSignalInSeconds: 30
-  TimeBoxedTrafficSignals: []
+  TimeBoxedTrafficSignals:
+  - Signals:
+    - CurrentDirections: 010000000200000003000000
+    - CurrentDirections: 
+    - CurrentDirections: 
+  - Signals:
+    - CurrentDirections: 0000000000000000
+    - CurrentDirections: 
+    - CurrentDirections: 
+  - Signals:
+    - CurrentDirections: 
+    - CurrentDirections: 00000000
+    - CurrentDirections: 
+  - Signals:
+    - CurrentDirections: 00000000
+    - CurrentDirections: 
+    - CurrentDirections: 
 --- !u!4 &1947796218
 Transform:
   m_ObjectHideFlags: 0
