@@ -6,11 +6,15 @@ using UnityEngine;
 public class SignalManager : MonoBehaviour
 {
     public TrafficSignalController[] Signals = null;
+    public SignalIndicator[] SignalIndicators = null;
     public int NumberOfTimeBoxes = 1;
     public int IntervalPerSignalInSeconds = 3;
+    
+    
 
     [Tooltip("Each Index in the root list represents a time box.\nLength of _timeBoxedTrafficSignals = _numberOfTimeBoxes.\nLength of _timeBoxedTrafficSignals[i].CurrentDirection = Length of _signals.\nLength _timeBoxedTrafficSignals[i].CurrentDirection[j] = number of Directions currently active on signal i.\nE.g. In timebox 0, signals 1 & 3 can have forward and right active for each,meanwhile signals 2 & 4 are off. In timebox 1, the signals change.")]
     public List<TrafficSignalsCollective> TimeBoxedTrafficSignals = null;
+
 
     private int _currentTimeboxIndex = 0;
 
@@ -25,7 +29,27 @@ public class SignalManager : MonoBehaviour
 
     private void Start()
     {
+        AssignSignalsToIndicators();
+
         CycleTimeBox();
+    }
+
+    private void AssignSignalsToIndicators()
+    {
+        if (Signals.Length != SignalIndicators.Length)
+        {
+            Debug.LogError("Number of signals and their indicators don't match. Please check and try again.");
+
+            enabled = false;
+            gameObject.SetActive(false);
+            return;
+        }
+
+        for (int i = 0; i < Signals.Length; i++)
+        {
+            SignalIndicators[i].AssignSignalController(Signals[i]);
+        }
+
     }
 
     private void CycleTimeBox()

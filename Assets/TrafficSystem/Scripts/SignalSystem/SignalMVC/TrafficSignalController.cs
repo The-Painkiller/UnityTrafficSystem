@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(TrafficSignalView))]
@@ -14,6 +14,8 @@ public class TrafficSignalController : MonoBehaviour
     private TrafficSignalModel _model;
 
     private bool _signalLocked = false;
+
+    public Action SignalChanged = null;
 
     private void Awake()
     {
@@ -54,6 +56,7 @@ public class TrafficSignalController : MonoBehaviour
                 break;
         }
 
+        SignalChanged?.Invoke();
         _signalLocked = false;
     }
 
@@ -79,9 +82,14 @@ public class TrafficSignalController : MonoBehaviour
     }
 
 
-    public TrafficSignalStateID CurrentSignalState()
+    public TrafficSignalStateID GetCurrentSignalState()
     {
         return _model.CurrentSignalState;
+    }
+
+    public SignalDirectionID[] GetCurrentActiveSignalDirections()
+    {
+        return _model.CurrentActiveDirections;
     }
 
     public bool IsSignalActive(SignalDirectionID signal)

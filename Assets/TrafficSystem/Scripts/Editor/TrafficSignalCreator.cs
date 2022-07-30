@@ -3,14 +3,14 @@ using UnityEditor;
 
 public class TrafficSignalCreator : EditorWindow
 {
-    private const float WINDOW_WIDTH = 500f;
+    private const float WINDOW_WIDTH = 600f;
     private const float WINDOW_HEIGHT = 600f;
 
     private static SignalManager _currentSignalManager = null;
 
     private SerializedObject _serializedSignalManager;
-    private SerializedObject _serializedSignalDirections;
     private SerializedProperty _serializedSignalsArray;
+    private SerializedProperty _serializedCollidersArray;
     private SerializedProperty _serializedTimeBoxedSignalsList;
     private SerializedProperty _serializedSignalDirectionsArray;
 
@@ -65,6 +65,16 @@ public class TrafficSignalCreator : EditorWindow
             _serializedTimeBoxedSignalsList = _serializedSignalManager.FindProperty("TimeBoxedTrafficSignals");
         }
 
+        if (_serializedCollidersArray == null)
+        {
+            _serializedCollidersArray = _serializedSignalManager.FindProperty("SignalIndicators");
+        }
+
+        if (_currentSignalManager.SignalIndicators == null || _currentSignalManager.SignalIndicators.Length != _currentSignalManager.Signals.Length)
+        {
+            _currentSignalManager.SignalIndicators = new  SignalIndicator[_currentSignalManager.Signals.Length];
+        }
+
         GUILayout.Space(EditorUtils.SPACE_SIZE_LARGE);
 
         EditorGUI.indentLevel += 2;
@@ -80,7 +90,13 @@ public class TrafficSignalCreator : EditorWindow
 
         GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
 
+        EditorGUILayout.BeginHorizontal();
+
         EditorGUILayout.PropertyField(_serializedSignalsArray, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_LARGE));
+
+        EditorGUILayout.PropertyField(_serializedCollidersArray, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_XLARGE));
+
+        EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
 
