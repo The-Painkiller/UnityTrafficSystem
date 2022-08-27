@@ -13,40 +13,24 @@ public class Vehicle : MonoBehaviour
     private float _movementSpeed = 10f;
     private float _turningSpeed = 5f;
     private float _speedSwitchTimeIncrement = 0.1f;
-    private float _turningPointDistance = 1f;
     private float _newSpeed = 0f;
     private float _cachedSpeed = 0f;
+    private float _turningPointDistance = 1f;
+    public float TurningPointDistance => _turningPointDistance;
 
     private Vector3 _currentDestination = Vector3.zero;
-    private Vector3 _nextWaypointDirectionVector = Vector3.zero;
-    private Vector3 _previousWaypointDirecionVector = Vector3.zero;
 
     private bool _isActiveOnPath = false;
-    private bool _isTurning = false;
-
-    private int _totalPathLength = 0;
-    private int _currentWaypointIndex = 0;
-
-
-    private WaypointManager _waypointManager = null;
-    private NavMeshAgent _navMeshAgent = null;
+   
     private Transform _transform = null;
+    public Transform VehicleTransform => _transform;
 
-    private Waypoint _currentWaypoint = null;
-    private Waypoint _previousWaypoint = null;
-    private Waypoint _nextWaypoint = null;
-
-    private SignalDirectionID _nextTurnDirection = SignalDirectionID.None;
-    public SignalDirectionID NextTurnDirection => _nextTurnDirection;
-
-    public bool IsTurning => _isTurning;
+    private NavMeshAgent _navMeshAgent = null;
 
     private void Awake()
     {
         _transform = transform;
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        _waypointManager = GetComponent<WaypointManager>();
-        _waypointManager.WaypointManagerInitialized += InitializePath;
         SetVehicleConfiguration();
     }
 
@@ -63,30 +47,28 @@ public class Vehicle : MonoBehaviour
         _navMeshAgent.angularSpeed = _vehicleConfig.AngularSpeed;
     }
 
-    private void DriveToNextPoint()
+    public void DriveToDestination(Vector3 destination)
     {
-        _currentWaypointIndex++;
-        if (_currentWaypointIndex >= _totalPathLength || _currentWaypoint == null)
-        {
-            _navMeshAgent.autoBraking = true;
-            _navMeshAgent.isStopped = true;
-            return;
-        }
-
-        _previousWaypoint = _currentWaypoint;
-        _currentWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex);
-        _nextWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex + 1);
-
         _newSpeed = _movementSpeed;
-
-        _isTurning = CheckForTurnAhead(out _nextTurnDirection);
-        DriveToDestination(_currentWaypoint.Position);
-    }
-
-    private void DriveToDestination(Vector3 destination)
-    {
         _currentDestination = destination;
         _navMeshAgent.SetDestination(_currentDestination);
+    }
+
+    public void SetSpeed(float speed)
+    {
+        _newSpeed = speed;
+    }
+
+    public void SetSpeedCommon(bool isTurning)
+    {
+        if (isTurning)
+        {
+            SetSpeed(_turningSpeed);
+        }
+        else
+        {
+            SetSpeed(_movementSpeed);
+        }
     }
 
     private void FixedUpdate()
@@ -95,16 +77,6 @@ public class Vehicle : MonoBehaviour
             return;
 
         SpeedSwitch();
-
-        if (Vector3.Distance(_transform.position, _currentDestination) < _turningPointDistance && IsTurning)
-        {
-            _newSpeed = _turningSpeed;
-        }
-
-        if (_transform.position.IsEqualTo(_currentDestination))
-        {
-            DriveToNextPoint();
-        }
     }
 
     private void SpeedSwitch()
@@ -115,57 +87,27 @@ public class Vehicle : MonoBehaviour
         _navMeshAgent.speed = Mathf.Lerp(_navMeshAgent.speed, _newSpeed, _speedSwitchTimeIncrement);        
     }
 
-    private bool CheckForTurnAhead(out SignalDirectionID direction)
+    public void Initialize(Vector3 startPosition,  Vector3 startForwardOrientation)
     {
-        if (_nextWaypoint == null)
-        {
-            direction = SignalDirectionID.None;
-            return false;
-        }
-
-        _previousWaypointDirecionVector = _currentWaypoint.Position - _previousWaypoint.Position;
-        _nextWaypointDirectionVector = _currentWaypoint.Position - _nextWaypoint.Position;
-
-        float angle = Vector3.Angle(_previousWaypointDirecionVector, _nextWaypointDirectionVector);
-
-        if (angle <= 145f)
-        {
-            Vector3 cross = Vector3.Cross(_previousWaypointDirecionVector, _nextWaypointDirectionVector);
-
-            direction = cross.y >= 0f ? SignalDirectionID.Left : SignalDirectionID.Right;
-
-            return true;
-        }
-
-        direction = SignalDirectionID.Forward;
-        return false;
-    }
-
-    public void InitializePath()
-    {
-        if (!_waypointManager || _waypointManager.GetTotalPathLength() == 0)
-            return;
-
-        _totalPathLength = _waypointManager.GetTotalPathLength();
-        _transform.position = _waypointManager.GetPositionAtIndex(0);
-        _transform.forward = _waypointManager.GetOrientationAtIndex(0);
-
+        _transform.position = startPosition;
+        _transform.forward = startForwardOrientation;
         _navMeshAgent.isStopped = false;
         _isActiveOnPath = true;
-
-        _currentWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex);
-
-        DriveToNextPoint();
     }
 
     public void StartVehicle()
     {
         _newSpeed = _cachedSpeed == 0f ? _movementSpeed : _cachedSpeed;
+        _navMeshAgent.autoBraking = false;
+        _navMeshAgent.isStopped = false;
     }
+
 
     public void StopVehicle()
     {
         _cachedSpeed = _navMeshAgent.speed;
         _newSpeed = 0;
+        _navMeshAgent.autoBraking = true;
+        _navMeshAgent.isStopped = true;
     }
 }

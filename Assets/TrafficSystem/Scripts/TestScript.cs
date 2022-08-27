@@ -34,6 +34,8 @@ public class TestScript : MonoBehaviour
         _objectDirection01 = _objects[1].position - _objects[0].position;
         _objectDirection02 = _objects[1].position - _objects[2].position;
 
-        Debug.Log(Vector3.Angle(_objectDirection01, _objectDirection02));
+        //Debug.Log(Vector3.Angle(_objectDirection01, _objectDirection02));
+        //Debug.Log(Vector3.Cross(_objectDirection01, _objectDirection02));
+        //Debug.Log(Vector3.Dot(_objectDirection01, _objectDirection02));
     }
 }

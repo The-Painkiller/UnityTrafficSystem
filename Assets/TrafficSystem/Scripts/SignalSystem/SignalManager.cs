@@ -54,7 +54,7 @@ public class SignalManager : MonoBehaviour
 
     private void CycleTimeBox()
     {
-        if (_currentTimeboxIndex < 0 || _currentTimeboxIndex >= NumberOfTimeBoxes)
+        if (_currentTimeboxIndex < 0 || _currentTimeboxIndex >= TimeBoxedTrafficSignals.Count)
             _currentTimeboxIndex = 0;
 
         for (int i = 0; i < Signals.Length; i++)
@@ -64,6 +64,7 @@ public class SignalManager : MonoBehaviour
                 || TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections[0] == SignalDirectionID.None)
             {
                 Signals[i].SwitchSignal(TrafficSignalStateID.Red);
+                StartCoroutine(CycleTimeboxPostInterval());
                 continue;
             }
 

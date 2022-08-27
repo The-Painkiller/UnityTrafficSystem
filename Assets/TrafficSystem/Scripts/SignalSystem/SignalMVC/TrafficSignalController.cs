@@ -70,7 +70,10 @@ public class TrafficSignalController : MonoBehaviour
     public void SwitchSignal(TrafficSignalStateID signalState, SignalDirectionID [] direction  = null)
     {
         if (_model.CurrentSignalState == signalState && _model.CurrentActiveDirections == direction)
+        {
+            SignalChanged?.Invoke();
             return;
+        }
 
         if (_signalLocked)
             return;

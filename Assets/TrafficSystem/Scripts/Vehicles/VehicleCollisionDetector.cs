@@ -5,7 +5,7 @@ public enum CollisionTypes
 {
     None,
     Signal,
-    VehicleProximity
+    Proximity
 }
 
 public class VehicleCollisionDetector : MonoBehaviour
@@ -19,26 +19,30 @@ public class VehicleCollisionDetector : MonoBehaviour
     private void OnTriggerEnter(Collider trigger)
     {
         ///Add vehicle proximity logic.
-        
-        _currentSignalIndicator = trigger.GetComponent<SignalIndicator>();
-        if (_currentSignalIndicator == null)
+        ///Add Triggers in a list and remove similarly.
+        if (trigger.GetComponent<Collider>().isTrigger)
         {
-            return;
+            _currentSignalIndicator = trigger.gameObject.GetComponent<SignalIndicator>();
+            if (_currentSignalIndicator == null)
+            {
+                return;
+            }
+
+            TriggerEncountered?.Invoke(CollisionTypes.Signal);
+
+            _currentSignalIndicator.SignalChanged += OnSignalChanged;
         }
-
-        TriggerEncountered?.Invoke(CollisionTypes.Signal);
-
-        _currentSignalIndicator.SignalChanged += OnSignalChanged;
     }
 
     private void OnTriggerExit(Collider trigger)
     {
-        _currentSignalIndicator.SignalChanged -= OnSignalChanged;
+        if (_currentSignalIndicator != null)
+            _currentSignalIndicator.SignalChanged -= OnSignalChanged;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        
+       ///Add collisions in a list and remove similarly.
     }
 
     private void OnCollisionExit(Collision collision)
@@ -48,6 +52,6 @@ public class VehicleCollisionDetector : MonoBehaviour
 
     private void OnSignalChanged()
     {
-
+        TriggerEncountered?.Invoke(CollisionTypes.Signal);
     }
 }
