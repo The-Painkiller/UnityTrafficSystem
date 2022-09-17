@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum CollisionTypes
@@ -14,23 +15,32 @@ public class VehicleCollisionDetector : MonoBehaviour
     public SignalIndicator CurrentSignalIndicator => _currentSignalIndicator;
 
     public Action<CollisionTypes> TriggerEncountered;
+    public Action<bool> CollisionEncountered;
 
+    private List<Collider> _encounteredTriggers = new List<Collider>();
+    private List<Collision> _encounteredCollisions = new List<Collision>();
 
     private void OnTriggerEnter(Collider trigger)
     {
-        ///Add vehicle proximity logic.
-        ///Add Triggers in a list and remove similarly.
-        if (trigger.GetComponent<Collider>().isTrigger)
+        if (trigger.isTrigger)
         {
-            _currentSignalIndicator = trigger.gameObject.GetComponent<SignalIndicator>();
-            if (_currentSignalIndicator == null)
+            if (!_encounteredTriggers.Contains(trigger))
             {
+                _encounteredTriggers.Add(trigger);
+            }
+
+            _currentSignalIndicator = trigger.gameObject.GetComponent<SignalIndicator>();
+            if (_currentSignalIndicator != null)
+            {
+                TriggerEncountered?.Invoke(CollisionTypes.Signal);
+                _currentSignalIndicator.SignalChanged += OnSignalChanged;
                 return;
             }
 
-            TriggerEncountered?.Invoke(CollisionTypes.Signal);
-
-            _currentSignalIndicator.SignalChanged += OnSignalChanged;
+            if (trigger.GetComponent<VehicleCollisionDetector>() != null)
+            {
+                TriggerEncountered?.Invoke(CollisionTypes.Proximity);
+            }
         }
     }
 
@@ -38,16 +48,34 @@ public class VehicleCollisionDetector : MonoBehaviour
     {
         if (_currentSignalIndicator != null)
             _currentSignalIndicator.SignalChanged -= OnSignalChanged;
+
+        if (_encounteredTriggers.Contains(trigger))
+        {
+            _encounteredTriggers.Remove(trigger);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-       ///Add collisions in a list and remove similarly.
+        if (!_encounteredCollisions.Contains(collision))
+        {
+            _encounteredCollisions.Add(collision);
+            CollisionEncountered?.Invoke(true);
+        }
+
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        
+        if (_encounteredCollisions.Contains(collision))
+        {
+            _encounteredCollisions.Remove(collision);
+        }
+
+        if (_encounteredCollisions.Count == 0)
+        {
+            CollisionEncountered?.Invoke(false);
+        }
     }
 
     private void OnSignalChanged()

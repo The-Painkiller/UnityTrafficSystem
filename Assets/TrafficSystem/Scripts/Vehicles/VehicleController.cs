@@ -44,12 +44,17 @@ public class VehicleController : MonoBehaviour
     private void Start()
     {
         _collisionDetector.TriggerEncountered += OnTriggerEncountered;
+        _collisionDetector.CollisionEncountered += OnCollisionEncountered;
+        //_collisionDetector.CollisionExited += OnCollisionExited;
+
         DriveVehicleToNextPoint();
     }
     
     private void OnDestroy()
     {
         _collisionDetector.TriggerEncountered -= OnTriggerEncountered;
+        _collisionDetector.CollisionEncountered -= OnCollisionEncountered;
+        //_collisionDetector.CollisionExited -= OnCollisionExited;
     }
 
     private void FixedUpdate()
@@ -134,6 +139,8 @@ public class VehicleController : MonoBehaviour
                 break;
 
             case CollisionTypes.Proximity:
+                _vehicle.StopVehicle();
+                _isVehicleStopped = true;
                 break;
         }
     }
@@ -167,6 +174,21 @@ public class VehicleController : MonoBehaviour
                     _isVehicleStopped = false;
                     break;
             }
+        }
+    }
+
+
+    private void OnCollisionEncountered(bool collisionsExist)
+    {
+        if (collisionsExist)
+        {
+            _vehicle.StopVehicle();
+            _isVehicleStopped = true;
+        }
+        else
+        {
+            _vehicle.StartVehicle();
+            _isVehicleStopped = false;
         }
     }
 }

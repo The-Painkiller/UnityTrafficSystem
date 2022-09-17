@@ -97,7 +97,7 @@ public class Vehicle : MonoBehaviour
 
     public void StartVehicle()
     {
-        _newSpeed = _cachedSpeed == 0f ? _movementSpeed : _cachedSpeed;
+        _newSpeed = _cachedSpeed.IsEqualTo(0f) ? _movementSpeed : _cachedSpeed;
         _navMeshAgent.autoBraking = false;
         _navMeshAgent.isStopped = false;
     }

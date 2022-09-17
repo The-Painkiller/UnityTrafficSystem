@@ -9,6 +9,6 @@ public static class Extensions
 
     public static bool IsEqualTo(this float a, float b)
     {
-        return Mathf.Approximately(a, b);
+        return Mathf.Abs(a-b) <= 0.01f;
     }
 }
