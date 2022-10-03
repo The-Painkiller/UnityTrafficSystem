@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5049029318503537323}
   - component: {fileID: 5860646889974136831}
-  - component: {fileID: 6211985439100671351}
+  - component: {fileID: 6322680892977528397}
   m_Layer: 3
   m_Name: Left
   m_TagString: Untagged
@@ -46,7 +46,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.9603415, y: 0.75, z: 0.9802886}
   m_Center: {x: -0.000000008616291, y: 0, z: -0.14455639}
---- !u!54 &6211985439100671351
+--- !u!54 &6322680892977528397
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,7 +56,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.0000001
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 6329641558341838466}
   - component: {fileID: 6329641558341838467}
   - component: {fileID: 6329641558341838460}
-  - component: {fileID: 6329641558341838461}
+  - component: {fileID: 2374383934631980558}
   m_Layer: 3
   m_Name: Front
   m_TagString: Untagged
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea84faf441ec653418c4ff604a8a058a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &6329641558341838461
+--- !u!54 &2374383934631980558
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,7 +131,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.0000001
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -158,7 +158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6329641559345689418
 Transform:
   m_ObjectHideFlags: 0
@@ -395,7 +395,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6495374685280566174}
   - component: {fileID: 5574077898264597773}
-  - component: {fileID: 3428252553496096111}
+  - component: {fileID: 6209544456081179747}
   m_Layer: 3
   m_Name: Back
   m_TagString: Untagged
@@ -431,7 +431,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 0.75, z: 1.4505508}
   m_Center: {x: 1.4210855e-14, y: 0, z: 0.16738534}
---- !u!54 &3428252553496096111
+--- !u!54 &6209544456081179747
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -441,7 +441,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.0000001
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -457,7 +457,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1936556296700717506}
   - component: {fileID: 7326808916141160362}
-  - component: {fileID: 4973520369815401847}
+  - component: {fileID: 4464389496074385785}
   m_Layer: 3
   m_Name: Right
   m_TagString: Untagged
@@ -493,7 +493,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.9603415, y: 0.75, z: 0.9802886}
   m_Center: {x: -0.000000008616291, y: 0, z: -0.14455639}
---- !u!54 &4973520369815401847
+--- !u!54 &4464389496074385785
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -503,7 +503,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.0000001
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0

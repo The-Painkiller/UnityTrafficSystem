@@ -16,5 +16,5 @@ MonoBehaviour:
   TurningSpeed: 6
   Acceleration: 21
   AngularSpeed: 125
-  SpeedSwitchTimeStep: 0.1
+  SpeedSwitchTimeStep: 0.15
   TurningPointDistance: 10

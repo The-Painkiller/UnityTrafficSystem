@@ -16,6 +16,7 @@ public class VehicleController : MonoBehaviour
     public bool IsVehicleTurnPending => _isVehicleTurnPending;
 
     private bool _isVehicleStopped = false;
+    private bool _isVehicleActive = false;
 
     private Waypoint _currentWaypoint = null;
     private Waypoint _previousWaypoint = null;
@@ -27,6 +28,8 @@ public class VehicleController : MonoBehaviour
     private SignalDirectionID _nextTurnDirection = SignalDirectionID.None;
     public SignalDirectionID NextTurnDirection => _nextTurnDirection;
 
+    public static Action<VehicleController> VehicleReachedEnd;
+
     private void Awake()
     {
         if (_vehicle == null)
@@ -37,28 +40,18 @@ public class VehicleController : MonoBehaviour
         }
 
         _waypointManager = GetComponent<WaypointManager>();
-        _waypointManager.WaypointManagerInitialized += Initialize;
+        //_waypointManager.WaypointManagerInitialized += Initialize;
 
         _collisionDetector = GetComponentInChildren<VehicleCollisionDetector>();
     }
-    private void Start()
-    {
-        _collisionDetector.TriggerEncountered += OnTriggerEncountered;
-        _collisionDetector.CollisionEncountered += OnCollisionEncountered;
-        //_collisionDetector.CollisionExited += OnCollisionExited;
-
-        DriveVehicleToNextPoint();
-    }
     
-    private void OnDestroy()
-    {
-        _collisionDetector.TriggerEncountered -= OnTriggerEncountered;
-        _collisionDetector.CollisionEncountered -= OnCollisionEncountered;
-        //_collisionDetector.CollisionExited -= OnCollisionExited;
-    }
-
     private void FixedUpdate()
     {
+        if (!_isVehicleActive)
+        {
+            return;
+        }
+
         if (Vector3.Distance(_vehicle.VehicleTransform.position, _currentWaypoint.Position) < _vehicle.TurningPointDistance 
             && _isVehicleTurnPending
             && !_isVehicleStopped)
@@ -72,15 +65,35 @@ public class VehicleController : MonoBehaviour
         }
     }
 
-    private void Initialize()
+    public void Initialize(Waypoint[] path)
     {
-        if (!_waypointManager || _waypointManager.GetTotalPathLength() == 0)
+        if (_waypointManager == null || path.Length == 0)
+        {
+            VehicleReachedEnd?.Invoke(this);
             return;
+        }
+
+        _waypointManager.AssignPath(path);
+        _currentWaypointIndex = 0;
+
+        _collisionDetector.TriggerEncountered += OnTriggerEncountered;
+        _collisionDetector.CollisionEncountered += OnCollisionEncountered;
 
         _totalPathLength = _waypointManager.GetTotalPathLength();
 
         _vehicle.Initialize(_waypointManager.GetPositionAtIndex(0), _waypointManager.GetOrientationAtIndex(0));
         _currentWaypoint = _waypointManager.GetWaypointAtIndex(_currentWaypointIndex);
+
+        _isVehicleActive = true;
+        DriveVehicleToNextPoint();
+    }
+
+    private void Finish()
+    {
+        _isVehicleActive = false;
+        _currentWaypointIndex = 0;
+        _collisionDetector.TriggerEncountered -= OnTriggerEncountered;
+        _collisionDetector.CollisionEncountered -= OnCollisionEncountered;
     }
 
     private void DriveVehicleToNextPoint()
@@ -89,6 +102,8 @@ public class VehicleController : MonoBehaviour
         if (_currentWaypointIndex >= _totalPathLength || _currentWaypoint == null)
         {
             _vehicle.StopVehicle();
+            Finish();
+            VehicleReachedEnd?.Invoke(this);
             return;
         }
 

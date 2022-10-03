@@ -40,20 +40,10 @@ public class PathsManager : MonoBehaviour
     {
         if (_paths.Count > 0)
         {
-            return _paths[0/*[UnityEngine.Random.Range(0, _paths.Count)*/].Waypoints;
+            return _paths[UnityEngine.Random.Range(0, _paths.Count)].Waypoints;
         }
 
         return null;
-        //for (int i = 0; i < _paths.Count; i++)
-        //{
-        //    if (_pathsClear[i])
-        //    {
-        //        _pathsClear[i] = false;
-        //        return _paths[i].Waypoints;
-        //    }
-        //}
-
-        //return null;
     }
 
 #if UNITY_EDITOR
