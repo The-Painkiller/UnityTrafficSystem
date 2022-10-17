@@ -676,9 +676,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2860657422620803688}
-  - component: {fileID: 2860657422620803689}
   m_Layer: 0
-  m_Name: SignalManager_Fwd_Right
+  m_Name: Signals_Fwd_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -701,28 +700,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
---- !u!114 &2860657422620803689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2860657422620803686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1dc6f31d6cbe774292608d982a7c97f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Signals:
-  - {fileID: 2860657421105295405}
-  SignalIndicators:
-  - {fileID: 2860657420568286727}
-  NumberOfTimeBoxes: 0
-  IntervalPerSignalInSeconds: 10
-  TimeBoxedTrafficSignals:
-  - Signals:
-    - CurrentDirections: 00000000
-  - Signals:
-    - CurrentDirections: 0100000003000000
-  - Signals:
-    - CurrentDirections: 03000000
