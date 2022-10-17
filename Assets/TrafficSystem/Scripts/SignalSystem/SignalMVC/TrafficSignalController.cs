@@ -17,6 +17,20 @@ public class TrafficSignalController : MonoBehaviour
 
     public Action SignalChanged = null;
 
+#if UNITY_EDITOR
+    public SignalDirectionID[] SupportedDirections
+    {
+        get { return _supportedDirections; }
+        set { _supportedDirections = value; }
+    }
+
+    public int IntervalPerSignal
+    {
+        get { return _intervalPerSignal; }
+        set { _intervalPerSignal = value; }
+    }
+#endif
+
     private void Awake()
     {
         _view = GetComponent<TrafficSignalView>();

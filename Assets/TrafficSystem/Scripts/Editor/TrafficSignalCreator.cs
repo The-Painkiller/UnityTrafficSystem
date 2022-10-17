@@ -1,5 +1,5 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 public class TrafficSignalCreator : EditorWindow
 {
@@ -8,16 +8,18 @@ public class TrafficSignalCreator : EditorWindow
 
     private static SignalManager _currentSignalManager = null;
 
-    private SerializedObject _serializedSignalManager;
-    private SerializedProperty _serializedSignalsArray;
-    private SerializedProperty _serializedCollidersArray;
-    private SerializedProperty _serializedTimeBoxedSignalsList;
-    private SerializedProperty _serializedSignalDirectionsArray;
-
-    private Vector2 _globalScrollPosition = Vector2.zero;
-    private Vector2 _timeboxScrollPosition = Vector2.zero;
-
     private GUIStyle _verticalLine = new GUIStyle();
+    private Vector2 _globalScrollPosition = Vector2.zero;
+
+    private SerializedObject _serializedSignalManagerObject = null;
+    private SerializedObject _serializedSignalCreator = null;
+    private SerializedProperty _serializedSignalObjects = null;
+    private SerializedProperty _serializedTimeBoxes = null;
+    private SerializedProperty _serializedTimeBoxSignalsArray = null;
+    private SerializedProperty _serializedCurrentDirectionsArray = null;
+
+    private int _numberOfTimeBoxes = 0;
+
 
     [MenuItem("Traffic System/Traffic Signal Creator")]
     public static void Initialize()
@@ -33,6 +35,10 @@ public class TrafficSignalCreator : EditorWindow
         _verticalLine.normal.background = EditorGUIUtility.whiteTexture;
         _verticalLine.margin = new RectOffset(0, 0, 4, 4);
         _verticalLine.fixedWidth = 1;
+
+        _serializedSignalCreator = new SerializedObject(this);
+
+        _numberOfTimeBoxes = -1;
     }
 
     private void OnGUI()
@@ -52,114 +58,115 @@ public class TrafficSignalCreator : EditorWindow
         }
 
         if (_currentSignalManager == null)
+        {
             return;
-
-        if (_serializedSignalManager == null || _serializedSignalsArray == null)
-        {
-            _serializedSignalManager = new SerializedObject(_currentSignalManager);
-            _serializedSignalsArray = _serializedSignalManager.FindProperty("Signals");
         }
 
-        if (_serializedTimeBoxedSignalsList == null)
+        if (_serializedSignalManagerObject == null)
         {
-            _serializedTimeBoxedSignalsList = _serializedSignalManager.FindProperty("TimeBoxedTrafficSignals");
+            _serializedSignalManagerObject = new SerializedObject(_currentSignalManager);
+            _serializedSignalObjects = _serializedSignalManagerObject.FindProperty("Signals");
+            _serializedTimeBoxes = _serializedSignalManagerObject.FindProperty("TimeBoxedTrafficSignals");
         }
 
-        if (_serializedCollidersArray == null)
-        {
-            _serializedCollidersArray = _serializedSignalManager.FindProperty("SignalIndicators");
-        }
-
-        if (_currentSignalManager.SignalIndicators == null || _currentSignalManager.SignalIndicators.Length != _currentSignalManager.Signals.Length)
-        {
-            _currentSignalManager.SignalIndicators = new  SignalIndicator[_currentSignalManager.Signals.Length];
-        }
+        if(_numberOfTimeBoxes == -1)
+            _numberOfTimeBoxes = _currentSignalManager.TimeBoxedTrafficSignals.Count;
 
         GUILayout.Space(EditorUtils.SPACE_SIZE_LARGE);
-
         EditorGUI.indentLevel += 2;
+        
+        DisplayIntervalInSeconds();
+
+        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
+        EditorUtils.DrawHorizontalLine(Color.black);
+        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
+
         _globalScrollPosition = EditorGUILayout.BeginScrollView(_globalScrollPosition);
-        DisplaySignalManager();
+
+        DisplaySignalsList();
+
+        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
+        EditorUtils.DrawHorizontalLine(Color.black);
+        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
+        
+        DisplayTimeBoxes();
+
+
+        _serializedSignalManagerObject.ApplyModifiedProperties();
+        _serializedSignalManagerObject.Update();
+        
         EditorGUILayout.EndScrollView();
         EditorGUI.indentLevel -= 2;
     }
 
-    private void DisplaySignalManager()
+    private static void DisplayIntervalInSeconds()
     {
-        _currentSignalManager.IntervalPerSignalInSeconds = EditorGUILayout.IntField("Time Per Signal", _currentSignalManager.IntervalPerSignalInSeconds, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_MEDIUM));
+        _currentSignalManager.IntervalPerSignalInSeconds = EditorGUILayout.IntField("Signal Interval(Secs)", _currentSignalManager.IntervalPerSignalInSeconds, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_XLARGE));
+    }
 
-        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
+    private void DisplaySignalsList()
+    {
+        EditorGUILayout.PropertyField(_serializedSignalObjects);
 
-        EditorGUILayout.BeginHorizontal();
-
-        EditorGUILayout.PropertyField(_serializedSignalsArray, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_LARGE));
-
-        EditorGUILayout.PropertyField(_serializedCollidersArray, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_XLARGE));
-
-        EditorGUILayout.EndHorizontal();
-
-        GUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
-
-        EditorUtils.DrawHorizontalLine(Color.black);
-
-        GUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
-
-        EditorGUILayout.BeginHorizontal();
-
-        EditorGUILayout.IntField("Time Boxes", _currentSignalManager.TimeBoxedTrafficSignals.Count, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_MEDIUM));
-
-        if (GUILayout.Button("+", GUILayout.MaxWidth(EditorUtils.SPACE_SIZE_LARGE)))
-        {
-            _currentSignalManager.TimeBoxedTrafficSignals.Add(new TrafficSignalsCollective());
-        }
-        if (GUILayout.Button("-", GUILayout.MaxWidth(EditorUtils.SPACE_SIZE_LARGE)))
-        {
-            if (_currentSignalManager.TimeBoxedTrafficSignals.Count >= 1)
-            {
-                _currentSignalManager.TimeBoxedTrafficSignals.RemoveAt(_currentSignalManager.TimeBoxedTrafficSignals.Count - 1);
-            }
-        }
-
-        EditorGUILayout.EndHorizontal();
-
-        GUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
-
-        DisplayTimeBoxes();
-        
-        _serializedSignalManager.ApplyModifiedProperties();
+        _serializedSignalManagerObject.ApplyModifiedProperties();
+        _serializedSignalManagerObject.Update();
     }
 
     private void DisplayTimeBoxes()
     {
-        _timeboxScrollPosition = EditorGUILayout.BeginScrollView(_timeboxScrollPosition);
+        _numberOfTimeBoxes = EditorGUILayout.IntField("No. of Time boxes", _numberOfTimeBoxes, GUILayout.MaxWidth(EditorUtils.FIELD_SIZE_XLARGE));
+        ConsolidateNumberOfTimeBoxes();
+        EditorGUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
 
-        EditorUtils.DrawHorizontalLine(Color.gray, 400f);
-
-        for (int i = 0; i < _currentSignalManager.TimeBoxedTrafficSignals.Count; i++)
+        for (int i = 0; i < _serializedTimeBoxes.arraySize; i++)
         {
-            ////FIX THIS CONDITION. NOT REFLECTING PROPERLY!!
-            if (_currentSignalManager.TimeBoxedTrafficSignals[i].Signals == null || _currentSignalManager.TimeBoxedTrafficSignals[i].Signals.Length != _currentSignalManager.Signals.Length)
+            EditorUtils.DrawHorizontalLine(Color.cyan);
+            EditorGUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
+            EditorGUILayout.LabelField("Timebox " + (i + 1), EditorStyles.boldLabel);
+            EditorGUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
+
+            _serializedTimeBoxSignalsArray = _serializedTimeBoxes.GetArrayElementAtIndex(i).FindPropertyRelative("Signals");
+
+            _serializedTimeBoxSignalsArray.arraySize = _serializedSignalObjects.arraySize;
+
+            for (int j = 0; j < _serializedTimeBoxSignalsArray.arraySize; j++)
             {
-                TrafficSignalsCollective trafficSignalsCollective = _currentSignalManager.TimeBoxedTrafficSignals[i];
+                EditorGUILayout.LabelField("Signal " + j);
+                _serializedCurrentDirectionsArray = _serializedTimeBoxSignalsArray.GetArrayElementAtIndex(j).FindPropertyRelative("CurrentDirections");
 
-                trafficSignalsCollective.Signals = new SignalDirectionsCollective[_currentSignalManager.Signals.Length];
+                EditorGUILayout.PropertyField(_serializedCurrentDirectionsArray);
 
-                _currentSignalManager.TimeBoxedTrafficSignals[i] = trafficSignalsCollective;
-
-                Repaint();
+                EditorGUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
+                EditorUtils.DrawHorizontalLine(Color.gray);
+                EditorGUILayout.Space(EditorUtils.SPACE_SIZE_SMALL);
             }
 
-            EditorGUILayout.LabelField("Time Box " +  (i + 1));
-
-            _serializedSignalDirectionsArray = _serializedTimeBoxedSignalsList.GetArrayElementAtIndex(i).FindPropertyRelative("Signals");
-
-            EditorGUI.indentLevel += 2;
-            EditorGUILayout.PropertyField(_serializedSignalDirectionsArray, GUILayout.MaxWidth(400f));
-            EditorGUI.indentLevel -= 2;
-
-            EditorUtils.DrawHorizontalLine(Color.gray, 400f);
+            EditorGUILayout.Space(EditorUtils.SPACE_SIZE_MEDIUM);
         }
 
-        EditorGUILayout.EndScrollView();
+        _serializedSignalCreator.ApplyModifiedProperties();
+        _serializedSignalCreator.Update();
+
+    }
+
+    private void ConsolidateNumberOfTimeBoxes()
+    {
+        if (_currentSignalManager.TimeBoxedTrafficSignals.Count != _numberOfTimeBoxes)
+        {
+            if (_currentSignalManager.TimeBoxedTrafficSignals.Count > _numberOfTimeBoxes)
+            {
+                for (int i = _currentSignalManager.TimeBoxedTrafficSignals.Count - 1; i >= _numberOfTimeBoxes; i--)
+                {
+                    _currentSignalManager.TimeBoxedTrafficSignals.RemoveAt(i);
+                }
+            }
+            else
+            {
+                for (int i = _currentSignalManager.TimeBoxedTrafficSignals.Count; i <= _numberOfTimeBoxes; i++)
+                {
+                    _currentSignalManager.TimeBoxedTrafficSignals.Add(new TrafficSignalsCollective());
+                }
+            }
+        }
     }
 }

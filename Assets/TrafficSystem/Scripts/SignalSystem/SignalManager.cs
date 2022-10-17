@@ -5,11 +5,8 @@ using UnityEngine;
 
 public class SignalManager : MonoBehaviour
 {
-    public TrafficSignalController[] Signals = null;
-    public SignalIndicator[] SignalIndicators = null;
-    public int NumberOfTimeBoxes = 1;
+    public SignalObjects[] Signals = null;
     public int IntervalPerSignalInSeconds = 3;
-    
     
 
     [Tooltip("Each Index in the root list represents a time box.\nLength of _timeBoxedTrafficSignals = _numberOfTimeBoxes.\nLength of _timeBoxedTrafficSignals[i].CurrentDirection = Length of _signals.\nLength _timeBoxedTrafficSignals[i].CurrentDirection[j] = number of Directions currently active on signal i.\nE.g. In timebox 0, signals 1 & 3 can have forward and right active for each,meanwhile signals 2 & 4 are off. In timebox 1, the signals change.")]
@@ -36,20 +33,10 @@ public class SignalManager : MonoBehaviour
 
     private void AssignSignalsToIndicators()
     {
-        if (Signals.Length != SignalIndicators.Length)
-        {
-            Debug.LogError("Number of signals and their indicators don't match. Please check and try again.");
-
-            enabled = false;
-            gameObject.SetActive(false);
-            return;
-        }
-
         for (int i = 0; i < Signals.Length; i++)
         {
-            SignalIndicators[i].AssignSignalController(Signals[i]);
+            Signals[i].SignalCollider.AssignSignalController(Signals[i].Signal);
         }
-
     }
 
     private void CycleTimeBox()
@@ -63,12 +50,12 @@ public class SignalManager : MonoBehaviour
                 || TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections.Length == 0
                 || TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections[0] == SignalDirectionID.None)
             {
-                Signals[i].SwitchSignal(TrafficSignalStateID.Red);
+                Signals[i].Signal.SwitchSignal(TrafficSignalStateID.Red);
                 StartCoroutine(CycleTimeboxPostInterval());
                 continue;
             }
 
-            Signals[i].SwitchSignal(TrafficSignalStateID.Green, TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections);
+            Signals[i].Signal.SwitchSignal(TrafficSignalStateID.Green, TimeBoxedTrafficSignals[_currentTimeboxIndex].Signals[i].CurrentDirections);
         }
 
         StartCoroutine(CycleTimeboxPostInterval());
@@ -86,19 +73,19 @@ public class SignalManager : MonoBehaviour
     [ContextMenu("Red")]
     public void SwitchToRedSignal()
     {
-        Signals[0].SwitchSignal(TrafficSignalStateID.Red);
+        Signals[0].Signal.SwitchSignal(TrafficSignalStateID.Red);
     }
 
     [ContextMenu("Yellow")]
     public void SwitchToYellowSignal()
     {
-        Signals[0].SwitchSignal(TrafficSignalStateID.Yellow);
+        Signals[0].Signal.SwitchSignal(TrafficSignalStateID.Yellow);
     }
 
     [ContextMenu("Green")]
     public void SwitchToGreenSignal()
     {
-        Signals[0].SwitchSignal(TrafficSignalStateID.Green, new SignalDirectionID[] { SignalDirectionID.Forward, SignalDirectionID.Left });
+        Signals[0].Signal.SwitchSignal(TrafficSignalStateID.Green, new SignalDirectionID[] { SignalDirectionID.Forward, SignalDirectionID.Left });
     }
 #endif
 }
@@ -114,4 +101,11 @@ public struct TrafficSignalsCollective
 public struct SignalDirectionsCollective
 {
     public SignalDirectionID[] CurrentDirections;
+}
+
+[Serializable]
+public struct SignalObjects
+{
+    public TrafficSignalController Signal;
+    public SignalIndicator SignalCollider;
 }

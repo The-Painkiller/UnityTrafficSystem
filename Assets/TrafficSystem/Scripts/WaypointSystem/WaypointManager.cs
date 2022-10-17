@@ -5,18 +5,14 @@ public class WaypointManager : MonoBehaviour
 {
     private Waypoint[] _path = null;
 
-    private PathsManager _pathsManager = null;
+    //public Action WaypointManagerInitialized;
 
-    public Action WaypointManagerInitialized;
-
-    private void Start()
+    public void AssignPath(Waypoint[] path)
     {
-        _pathsManager = PathsManager.Instance;
+        _path = path;
 
-        _path = _pathsManager.GetRandomPath();
-
-        if (_path != null && _path.Length > 0)
-            WaypointManagerInitialized?.Invoke();
+        //if (_path != null && _path.Length > 0)
+        //    WaypointManagerInitialized?.Invoke();
     }
 
     public Vector3 GetPositionAtIndex(int index)
@@ -29,10 +25,11 @@ public class WaypointManager : MonoBehaviour
 
     public Vector3 GetOrientationAtIndex(int index)
     {
-        if (index < 0 || index >= _path.Length)
+        if (index < 0 || index + 1 >= _path.Length)
             return Vector3.zero;
 
-        return _path[index].transform.forward;
+
+        return _path[index + 1].transform.position - _path[index].transform.position;
     }
 
     public Waypoint GetWaypointAtIndex(int index)

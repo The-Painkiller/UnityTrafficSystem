@@ -14,6 +14,14 @@ public class SignalIndicator : MonoBehaviour
 
     public Action SignalChanged = null;
 
+#if UNITY_EDITOR
+    public Collider SignalInteractionCollider
+    {
+        get { return _collider; }
+        set { _collider = value; }
+    }
+#endif
+
     public void AssignSignalController(TrafficSignalController controller)
     {
         _signalController = controller;
