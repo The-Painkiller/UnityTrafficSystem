@@ -1,16 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class ExtensionUtils
+namespace TrafficSystem
 {
-    public static bool Contains(this SignalDirectionID[] array, SignalDirectionID item)
+    using UnityEngine;
+
+    public static class ExtensionUtils
     {
-        for (int i = 0; i < array.Length; i++)
+        public static bool Contains(this SignalDirectionID[] array, SignalDirectionID item)
         {
-            if (array[i] == item)
-                return true;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == item)
+                    return true;
+            }
+            return false;
         }
-        return false;
+
+        public static bool IsEqualTo(this Vector3 a, Vector3 b)
+        {
+            return Vector3.Distance(a, b) <= 1f;
+        }
+
+        public static bool IsEqualTo(this float a, float b)
+        {
+            return Mathf.Abs(a - b) <= 0.01f;
+        }
     }
 }

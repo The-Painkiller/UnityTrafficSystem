@@ -1,11 +1,13 @@
-public enum SignalDirectionID
+namespace TrafficSystem
 {
-    None,
-    Forward,
-    Left, 
-    Right
-    //North,
-    //East,
-    //South,
-    //West
+    /// <summary>
+    /// Represents the direction that a signal can give.
+    /// </summary>
+    public enum SignalDirectionID
+    {
+        None,
+        Forward,
+        Left,
+        Right
+    }
 }

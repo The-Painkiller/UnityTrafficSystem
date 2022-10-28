@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficSystem", "TrafficSystem.csproj", "{DCB11723-9DD1-E902-E6FB-603D178C85F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficSystem.WaypointSystem", "TrafficSystem.WaypointSystem.csproj", "{811099B9-D4AF-E3A4-A00E-963634C7E195}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{08918BB6-754B-82F4-71AB-2125764E1C82}"
 EndProject
 Global
@@ -17,10 +15,6 @@ Global
 		{DCB11723-9DD1-E902-E6FB-603D178C85F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCB11723-9DD1-E902-E6FB-603D178C85F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCB11723-9DD1-E902-E6FB-603D178C85F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{811099B9-D4AF-E3A4-A00E-963634C7E195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{811099B9-D4AF-E3A4-A00E-963634C7E195}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{811099B9-D4AF-E3A4-A00E-963634C7E195}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{811099B9-D4AF-E3A4-A00E-963634C7E195}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08918BB6-754B-82F4-71AB-2125764E1C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08918BB6-754B-82F4-71AB-2125764E1C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08918BB6-754B-82F4-71AB-2125764E1C82}.Release|Any CPU.ActiveCfg = Release|Any CPU

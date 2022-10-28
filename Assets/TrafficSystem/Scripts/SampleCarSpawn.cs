@@ -1,32 +1,34 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SampleCarSpawn : MonoBehaviour
+namespace TrafficSystem
 {
-    [SerializeField]
-    private Vehicle _vehicleToSpawn = null;
-
-    [SerializeField]
-    private int _numberOfVehiclesToSpawn = 2;
-
-    [SerializeField]
-    private float _timeDifferenceBetweenSpawn = 2f;
-
-    private void Awake()
+    public class SampleCarSpawn : MonoBehaviour
     {
-        if (_vehicleToSpawn == null)
-            return;
+        [SerializeField]
+        private Vehicle _vehicleToSpawn = null;
 
-        StartCoroutine(CarSpawner());
-    }
+        [SerializeField]
+        private int _numberOfVehiclesToSpawn = 2;
 
-    private IEnumerator CarSpawner()
-    {
-        for (int i = 0; i < _numberOfVehiclesToSpawn; i++)
+        [SerializeField]
+        private float _timeDifferenceBetweenSpawn = 2f;
+
+        private void Awake()
         {
-            Instantiate<Vehicle>(_vehicleToSpawn);
-            yield return new WaitForSeconds(_timeDifferenceBetweenSpawn);
+            if (_vehicleToSpawn == null)
+                return;
+
+            StartCoroutine(CarSpawner());
+        }
+
+        private IEnumerator CarSpawner()
+        {
+            for (int i = 0; i < _numberOfVehiclesToSpawn; i++)
+            {
+                Instantiate<Vehicle>(_vehicleToSpawn);
+                yield return new WaitForSeconds(_timeDifferenceBetweenSpawn);
+            }
         }
     }
 }

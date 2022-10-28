@@ -1,15 +1,19 @@
-/// <summary>
-/// Single Signal Block Model.
-/// </summary>
-public struct SignalBlock
+namespace TrafficSystem
 {
-    public SignalBlockStateID CurrentState;
-
-    public SignalDirectionID AssignedDirection;
-
-    public SignalBlock(SignalBlockStateID state, SignalDirectionID direction)
+    /// <summary>
+    /// Single Signal Block Model.
+    /// One block represents one single light on a signal.
+    /// Ex. Red light is one Signal Block.
+    /// </summary>
+    public struct SignalBlock
     {
-        CurrentState = state;
-        AssignedDirection = direction;
+        public SignalBlockStateID CurrentState;
+        public SignalDirectionID AssignedDirection;
+
+        public SignalBlock(SignalBlockStateID state, SignalDirectionID direction)
+        {
+            CurrentState = state;
+            AssignedDirection = direction;
+        }
     }
 }

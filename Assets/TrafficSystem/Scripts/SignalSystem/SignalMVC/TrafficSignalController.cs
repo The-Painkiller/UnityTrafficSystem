@@ -1,119 +1,130 @@
-using System;
-using System.Collections;
-using UnityEngine;
-
-[RequireComponent(typeof(TrafficSignalView))]
-public class TrafficSignalController : MonoBehaviour
+namespace TrafficSystem
 {
-    [SerializeField]
-    private SignalDirectionID[] _supportedDirections;
-    [SerializeField]
-    private int _intervalPerSignal;
+    using System;
+    using System.Collections;
+    using UnityEngine;
 
-    private TrafficSignalView _view;
-    private TrafficSignalModel _model;
-
-    private bool _signalLocked = false;
-
-    public Action SignalChanged = null;
-
-#if UNITY_EDITOR
-    public SignalDirectionID[] SupportedDirections
+    /// <summary>
+    /// Controller class for traffic signals.
+    /// Depends on the View class.
+    /// It represents one signal with multiple signal blocks.
+    /// 
+    /// Ex. 1 Traffic Signal controller can display Red, Yellow and Forward direction signal.
+    /// </summary>
+    [RequireComponent(typeof(TrafficSignalView))]
+    public class TrafficSignalController : MonoBehaviour
     {
-        get { return _supportedDirections; }
-        set { _supportedDirections = value; }
-    }
+        [SerializeField]
+        private SignalDirectionID[] _supportedDirections;
+        [SerializeField]
+        private int _intervalPerSignal;
 
-    public int IntervalPerSignal
-    {
-        get { return _intervalPerSignal; }
-        set { _intervalPerSignal = value; }
-    }
-#endif
+        private TrafficSignalView _view;
+        private TrafficSignalModel _model;
 
-    private void Awake()
-    {
-        _view = GetComponent<TrafficSignalView>();
-        if (_supportedDirections == null 
-            || _supportedDirections.Length == 0 
-            || _view == null)
+        private bool _signalLocked = false;
+
+        public Action SignalChanged = null;
+
+        private void Awake()
         {
-            enabled = false;
-            gameObject.SetActive(false);
+            _view = GetComponent<TrafficSignalView>();
+            if (_supportedDirections == null
+                || _supportedDirections.Length == 0
+                || _view == null)
+            {
+                enabled = false;
+                gameObject.SetActive(false);
+            }
+
+            _model = new TrafficSignalModel(_supportedDirections, _intervalPerSignal);
+
+            ResetToRedImmediate();
         }
 
-        _model = new TrafficSignalModel(_supportedDirections, _intervalPerSignal);
-
-        ResetToRedImmediate();
-    }
-
-    private IEnumerator ChangeSignal(TrafficSignalStateID targetSignalState, SignalDirectionID[] directions = null)
-    {
-        _signalLocked = true;
-        _model.CurrentSignalState = TrafficSignalStateID.Yellow;
-        _view.SwitchSignal(TrafficSignalStateID.Yellow);
-        
-        yield return new WaitForSeconds(0.5f);
-        
-        _model.CurrentSignalState = targetSignalState;
-        _model.CurrentActiveDirections = directions;
-        
-        switch (targetSignalState)
+        /// <summary>
+        /// Changes the signal to another state.
+        /// First changes the signal to yellow, then 1 second later, changes it to any given state, Red or Green.
+        /// </summary>
+        /// <param name="targetSignalState"></param>
+        /// <param name="directions"></param>
+        /// <returns></returns>
+        private IEnumerator ChangeSignal(TrafficSignalStateID targetSignalState, SignalDirectionID[] directions = null)
         {
-            case TrafficSignalStateID.Red:
-            case TrafficSignalStateID.Yellow:
-                _view.SwitchSignal(targetSignalState);
-                break;
+            _signalLocked = true;
+            _model.CurrentSignalState = TrafficSignalStateID.Yellow;
+            _view.SwitchSignal(TrafficSignalStateID.Yellow);
 
-            case TrafficSignalStateID.Green:
-                _view.SwitchSignal(targetSignalState, directions);
-                break;
-        }
+            yield return new WaitForSeconds(1f);
 
-        SignalChanged?.Invoke();
-        _signalLocked = false;
-    }
+            _model.CurrentSignalState = targetSignalState;
+            _model.CurrentActiveDirections = directions;
 
-    private void ResetToRedImmediate()
-    {
-        _model.CurrentActiveDirections = null;
-        _model.CurrentSignalState = TrafficSignalStateID.Red;
-        _view.SwitchSignal(TrafficSignalStateID.Red);
-    }
+            switch (targetSignalState)
+            {
+                case TrafficSignalStateID.Red:
+                case TrafficSignalStateID.Yellow:
+                    _view.SwitchSignal(targetSignalState);
+                    break;
 
-    public void SwitchSignal(TrafficSignalStateID signalState, SignalDirectionID [] direction  = null)
-    {
-        if (_model.CurrentSignalState == signalState && _model.CurrentActiveDirections == direction)
-        {
+                case TrafficSignalStateID.Green:
+                    _view.SwitchSignal(targetSignalState, directions);
+                    break;
+            }
+
             SignalChanged?.Invoke();
-            return;
+            _signalLocked = false;
         }
 
-        if (_signalLocked)
-            return;
+        /// <summary>
+        /// This will bypass the ChangeSignal coroutine and immediately change the signal to Red.
+        /// </summary>
+        private void ResetToRedImmediate()
+        {
+            _model.CurrentActiveDirections = null;
+            _model.CurrentSignalState = TrafficSignalStateID.Red;
+            _view.SwitchSignal(TrafficSignalStateID.Red);
+        }
 
-        _model.CurrentSignalState = signalState;
-        _model.CurrentActiveDirections = direction;
+        /// <summary>
+        /// Called publicly by the manager class, this sets the desired state
+        /// and calls the ChangeSignal coroutine.
+        /// </summary>
+        /// <param name="signalState">Desired signal state.</param>
+        /// <param name="direction">Desired number of directions to allow. If the state is Red, this could be Null or SignalDirectionID.None.</param>
+        public void SwitchSignal(TrafficSignalStateID signalState, SignalDirectionID[] direction = null)
+        {
+            if (_model.CurrentSignalState == signalState && _model.CurrentActiveDirections == direction)
+            {
+                return;
+            }
 
-        StartCoroutine(ChangeSignal(signalState, direction));
-    }
+            if (_signalLocked)
+                return;
 
+            _model.CurrentSignalState = signalState;
+            _model.CurrentActiveDirections = direction;
 
-    public TrafficSignalStateID GetCurrentSignalState()
-    {
-        return _model.CurrentSignalState;
-    }
+            StartCoroutine(ChangeSignal(signalState, direction));
+        }
 
-    public SignalDirectionID[] GetCurrentActiveSignalDirections()
-    {
-        return _model.CurrentActiveDirections;
-    }
+        /// <summary>
+        /// Gets current Signal State.
+        /// </summary>
+        /// <returns></returns>
+        public TrafficSignalStateID GetCurrentSignalState()
+        {
+            return _model.CurrentSignalState;
+        }
 
-    public bool IsSignalActive(SignalDirectionID signal)
-    {
-        if (_model.CurrentActiveDirections == null)
-            return false;
-
-        return _model.CurrentActiveDirections.Contains(signal);
+        /// <summary>
+        /// Gets the number of directions that are currently active.
+        /// If the signal state is Red, this could return Null or SignalDirectionID.None.
+        /// </summary>
+        /// <returns></returns>
+        public SignalDirectionID[] GetCurrentActiveSignalDirections()
+        {
+            return _model.CurrentActiveDirections;
+        }
     }
 }

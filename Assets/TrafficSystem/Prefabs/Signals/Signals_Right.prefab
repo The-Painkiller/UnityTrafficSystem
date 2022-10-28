@@ -107,6 +107,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6154371503961866454}
+  - component: {fileID: 5973920265532918875}
+  - component: {fileID: -2695604425674885983}
   m_Layer: 0
   m_Name: Signals_Right
   m_TagString: Untagged
@@ -131,6 +133,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -269.999, z: 0}
+--- !u!114 &5973920265532918875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6154371503961866452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e6046250039d7459508ad19b201ce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _redSignal:
+    SignalObject: {fileID: 6154371505172863375}
+    SignalDirection: 0
+  _yellowSignal:
+    SignalObject: {fileID: 6154371504967452176}
+    SignalDirection: 0
+  _greenSignals:
+  - SignalObject: {fileID: 6154371504055365844}
+    SignalDirection: 3
+--- !u!114 &-2695604425674885983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6154371503961866452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f739f6db368de094796619f8b6713fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _supportedDirections: 03000000
+  _intervalPerSignal: 3
 --- !u!1 &6154371504020941054
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,8 +421,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6154371504856511220}
-  - component: {fileID: 6154371504856511221}
-  - component: {fileID: 6154371504856511178}
   m_Layer: 0
   m_Name: Signal
   m_TagString: Untagged
@@ -410,41 +445,6 @@ Transform:
   m_Father: {fileID: 6154371503961866454}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
---- !u!114 &6154371504856511221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6154371504856511179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5e6046250039d7459508ad19b201ce4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _redSignal:
-    SignalObject: {fileID: 6154371505172863375}
-    SignalDirection: 0
-  _yellowSignal:
-    SignalObject: {fileID: 6154371504967452176}
-    SignalDirection: 0
-  _greenSignals:
-  - SignalObject: {fileID: 6154371504055365844}
-    SignalDirection: 3
---- !u!114 &6154371504856511178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6154371504856511179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f739f6db368de094796619f8b6713fa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _supportedDirections: 03000000
-  _intervalPerSignal: 3
 --- !u!1 &6154371504967452177
 GameObject:
   m_ObjectHideFlags: 0

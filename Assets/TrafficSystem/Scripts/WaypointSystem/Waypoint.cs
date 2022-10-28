@@ -1,39 +1,45 @@
 using UnityEngine;
 using UnityEditor;
-public class Waypoint : MonoBehaviour
+
+namespace TrafficSystem
 {
-    private Transform _transform = null;
+    /// <summary>
+    /// A single point of location on the map.
+    /// A group of waypoints make a path on which a vehicle travels.
+    /// </summary>
+    public class Waypoint : MonoBehaviour
+    {
+        private Transform _transform = null;
 
-    public Vector3 Position => _transform.position;
+        public Vector3 Position => _transform.position;
+
+        private void Awake()
+        {
+            _transform = transform;
+        }
 
 #if UNITY_EDITOR
-    [SerializeField]
-    private Color _gizmoColor = Color.yellow;
 
-    private static bool _displayObjectName = false;
-#endif
+        [SerializeField]
+        private Color _gizmoColor = Color.yellow;
 
-    private void Awake()
-    {
-        _transform = transform;
-    }
+        private static bool _displayObjectName = false;
 
-#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = _gizmoColor;
+            Gizmos.DrawSphere(transform.position, 1f);
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = _gizmoColor;
-        Gizmos.DrawSphere(transform.position, 1f);
+            if (_displayObjectName)
+                Handles.Label(transform.position, gameObject.name, EditorStyles.boldLabel);
+        }
 
-        if(_displayObjectName)
-            UnityEditor.Handles.Label(transform.position, gameObject.name, UnityEditor.EditorStyles.boldLabel);
-    }
-
-    public static void ToggleEditorOptions(bool toggle)
-    {
-        _displayObjectName = toggle;
-    }
+        public static void ToggleEditorOptions(bool toggle)
+        {
+            _displayObjectName = toggle;
+        }
 
 #endif
 
+    }
 }

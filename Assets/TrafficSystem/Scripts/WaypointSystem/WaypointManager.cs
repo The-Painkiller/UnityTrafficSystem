@@ -1,50 +1,52 @@
-using System;
 using UnityEngine;
 
-public class WaypointManager : MonoBehaviour
+namespace TrafficSystem
 {
-    private Waypoint[] _path = null;
-
-    //public Action WaypointManagerInitialized;
-
-    public void AssignPath(Waypoint[] path)
+/// <summary>
+/// Manager class for a path of waypoints.
+/// Gets attached on a vehicle and manages the waypoints on the vehicle's assigned path.
+/// </summary>
+/// 
+    public class WaypointManager : MonoBehaviour
     {
-        _path = path;
+        private Waypoint[] _path = null;
 
-        //if (_path != null && _path.Length > 0)
-        //    WaypointManagerInitialized?.Invoke();
-    }
+        public void AssignPath(Waypoint[] path)
+        {
+            _path = path;
+        }
 
-    public Vector3 GetPositionAtIndex(int index)
-    {
-        if (index < 0 || index >= _path.Length)
-            return Vector3.zero;
+        public Vector3 GetPositionAtIndex(int index)
+        {
+            if (index < 0 || index >= _path.Length)
+                return Vector3.zero;
 
-        return _path[index].Position;
-    }
+            return _path[index].Position;
+        }
 
-    public Vector3 GetOrientationAtIndex(int index)
-    {
-        if (index < 0 || index + 1 >= _path.Length)
-            return Vector3.zero;
+        public Vector3 GetOrientationAtIndex(int index)
+        {
+            if (index < 0 || index + 1 >= _path.Length)
+                return Vector3.zero;
 
 
-        return _path[index + 1].transform.position - _path[index].transform.position;
-    }
+            return _path[index + 1].transform.position - _path[index].transform.position;
+        }
 
-    public Waypoint GetWaypointAtIndex(int index)
-    {
-        if (index < 0 || index >= _path.Length)
-            return null;
+        public Waypoint GetWaypointAtIndex(int index)
+        {
+            if (index < 0 || index >= _path.Length)
+                return null;
 
-        return _path[index];
-    }
+            return _path[index];
+        }
 
-    public int GetTotalPathLength()
-    {
-        if (_path == null)
-            return 0;
+        public int GetTotalPathLength()
+        {
+            if (_path == null)
+                return 0;
 
-        return _path.Length;
+            return _path.Length;
+        }
     }
 }

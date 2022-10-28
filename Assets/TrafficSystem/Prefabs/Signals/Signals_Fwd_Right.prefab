@@ -156,7 +156,6 @@ GameObject:
   - component: {fileID: 2860657420922028624}
   - component: {fileID: 2860657420922028629}
   - component: {fileID: 2860657420922028626}
-  - component: {fileID: 2860657420922028627}
   m_Layer: 0
   m_Name: SignalBase_R
   m_TagString: Untagged
@@ -230,19 +229,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2860657420922028627
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2860657420922028625}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2860657421105295402
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,8 +238,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2860657421105295407}
-  - component: {fileID: 2860657421105295404}
-  - component: {fileID: 2860657421105295405}
   m_Layer: 0
   m_Name: Signal
   m_TagString: Untagged
@@ -278,43 +262,6 @@ Transform:
   m_Father: {fileID: 2860657422620803688}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
---- !u!114 &2860657421105295404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2860657421105295402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5e6046250039d7459508ad19b201ce4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _redSignal:
-    SignalObject: {fileID: 2860657421473000356}
-    SignalDirection: 0
-  _yellowSignal:
-    SignalObject: {fileID: 2860657421631404990}
-    SignalDirection: 0
-  _greenSignals:
-  - SignalObject: {fileID: 2860657422297242825}
-    SignalDirection: 1
-  - SignalObject: {fileID: 2860657420836982249}
-    SignalDirection: 3
---- !u!114 &2860657421105295405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2860657421105295402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f739f6db368de094796619f8b6713fa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _supportedDirections: 0100000003000000
-  _intervalPerSignal: 3
 --- !u!1 &2860657421473000357
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,7 +525,6 @@ GameObject:
   - component: {fileID: 2860657422491369026}
   - component: {fileID: 2860657422491369031}
   - component: {fileID: 2860657422491369028}
-  - component: {fileID: 2860657422491369029}
   m_Layer: 0
   m_Name: SignalBase
   m_TagString: Untagged
@@ -654,19 +600,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2860657422491369029
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2860657422491369027}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2860657422620803686
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,6 +609,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2860657422620803688}
+  - component: {fileID: 5255787527416907404}
+  - component: {fileID: -699664741999254328}
   m_Layer: 0
   m_Name: Signals_Fwd_Right
   m_TagString: Untagged
@@ -700,3 +635,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!114 &5255787527416907404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860657422620803686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e6046250039d7459508ad19b201ce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _redSignal:
+    SignalObject: {fileID: 2860657421473000356}
+    SignalDirection: 0
+  _yellowSignal:
+    SignalObject: {fileID: 2860657421631404990}
+    SignalDirection: 0
+  _greenSignals:
+  - SignalObject: {fileID: 2860657422297242825}
+    SignalDirection: 1
+  - SignalObject: {fileID: 2860657420836982249}
+    SignalDirection: 3
+--- !u!114 &-699664741999254328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860657422620803686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f739f6db368de094796619f8b6713fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _supportedDirections: 0100000003000000
+  _intervalPerSignal: 3

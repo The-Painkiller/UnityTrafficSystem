@@ -1,28 +1,34 @@
-using UnityEditor;
-using UnityEngine;
-
-public class EditorUtils
+namespace TrafficSystem
 {
-    public const float FIELD_SIZE_SMALL = 150f;
-    public const float FIELD_SIZE_MEDIUM = 200f;
-    public const float FIELD_SIZE_LARGE = 250f;
-    public const float FIELD_SIZE_XLARGE = 300f;
+    using UnityEditor;
+    using UnityEngine;
 
-    public const float SPACE_SIZE_SMALL = 10f;
-    public const float SPACE_SIZE_MEDIUM = 20f;
-    public const float SPACE_SIZE_LARGE = 30f;
-    public const float SPACE_SIZE_XLARGE = 40f;
-
-    private static Rect _horizontalLineRect = new Rect();
-    public static void DrawHorizontalLine(Color color, float width = 0f)
+    /// <summary>
+    /// Custom Editor Utility class. Just some basic commonly used stuff in here.
+    /// </summary>
+    public class EditorUtils
     {
-        _horizontalLineRect = EditorGUILayout.GetControlRect(false, 1f);
+        public const float FIELD_SIZE_SMALL = 150f;
+        public const float FIELD_SIZE_MEDIUM = 200f;
+        public const float FIELD_SIZE_LARGE = 250f;
+        public const float FIELD_SIZE_XLARGE = 300f;
 
-        if (width != 0f)
+        public const float SPACE_SIZE_SMALL = 10f;
+        public const float SPACE_SIZE_MEDIUM = 20f;
+        public const float SPACE_SIZE_LARGE = 30f;
+        public const float SPACE_SIZE_XLARGE = 40f;
+
+        private static Rect _horizontalLineRect = new Rect();
+        public static void DrawHorizontalLine(Color color, float width = 0f)
         {
-            _horizontalLineRect.width = width;
-        }
+            _horizontalLineRect = EditorGUILayout.GetControlRect(false, 1f);
 
-        EditorGUI.DrawRect(_horizontalLineRect, color);
+            if (width != 0f)
+            {
+                _horizontalLineRect.width = width;
+            }
+
+            EditorGUI.DrawRect(_horizontalLineRect, color);
+        }
     }
 }

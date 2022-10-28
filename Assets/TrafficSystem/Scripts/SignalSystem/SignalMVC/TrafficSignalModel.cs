@@ -1,26 +1,25 @@
-public struct TrafficSignalModel
+namespace TrafficSystem
 {
-    //public SignalBlock RedSignal;
-    //public SignalBlock YellowSignal;
-    //public SignalBlock[] GreenSignals;
-    public SignalDirectionID[] GreenSignalDirections;
-    public SignalDirectionID[] CurrentActiveDirections;
-    public TrafficSignalStateID CurrentSignalState;
-    public int SignalChangeInterval;
-
-    public TrafficSignalModel(SignalDirectionID[] supportedDirecions, int signalInterval)
+    /// <summary>
+    /// Model class for a Traffic Signal.
+    /// Each Signal has the number of directions they support and
+    /// the number of directions they have active right now.
+    /// It also has stores the current state of the signal as well as
+    /// the time interval between each timebox.
+    /// </summary>
+    public struct TrafficSignalModel
     {
-        GreenSignalDirections = supportedDirecions;
-        SignalChangeInterval = signalInterval;
-        CurrentSignalState = TrafficSignalStateID.None ;
-        CurrentActiveDirections = null;
+        public SignalDirectionID[] GreenSignalDirections;
+        public SignalDirectionID[] CurrentActiveDirections;
+        public TrafficSignalStateID CurrentSignalState;
+        public int SignalChangeInterval;
+
+        public TrafficSignalModel(SignalDirectionID[] supportedDirecions, int signalInterval)
+        {
+            GreenSignalDirections = supportedDirecions;
+            SignalChangeInterval = signalInterval;
+            CurrentSignalState = TrafficSignalStateID.None;
+            CurrentActiveDirections = null;
+        }
     }
-    //public TrafficSignalModel(SignalBlock redSignal, SignalBlock yellowSignal, SignalBlock[] greenSignals, int signalInterval, TrafficSignalStateID currentState)
-    //{
-    //    RedSignal = redSignal;
-    //    YellowSignal = yellowSignal;
-    //    GreenSignals = greenSignals;
-    //    CurrentSignalState = currentState;
-    //    SignalChangeInterval = signalInterval;
-    //}
 }
