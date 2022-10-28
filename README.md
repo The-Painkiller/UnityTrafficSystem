@@ -38,10 +38,10 @@ The signal system runs the signals across the map. It's partially decentralized 
 
 ## Editor Tools
 
-###Path Creator
+### Path Creator
 
 The Path Creator tool lets you add each individual waypoint to create a sequence and make a Path. It then pushes that Path onto the list maintained by the PathsManager within the scene.
 
-###Traffic Signal Creator
+### Traffic Signal Creator
 
 This tool helps create signals timebox on a synced SignalManager in a little bit easier way. With this tool you can add signals to the SignalManager along with their indicator triggers. You can then go through the Timebox cycle and assign states and directions to each signal within a timebox.
