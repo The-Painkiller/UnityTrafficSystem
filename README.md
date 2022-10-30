@@ -1,8 +1,15 @@
 # Introduction
 
-A decent traffic system prototype in Unity that I had been thinking about for a long time.
-Vehicle behaviour, signal systems, waypoint systems, all written from scratch. Vehicles are quite plain at the moment, with them travelling from waypoint to waypoint and obeying signals of course. They also get reset on stalling for X seconds, but that's it. The vehicles can't go around other vehicles or obstacles right now. 
+A simple traffic system prototype in Unity that I had been thinking about for a long time.
+
+It contains it's own waypoints system, signal system and a very basic vehicle behaviour, along with a couple of tools to help with path creation and multi signal syncing, all written from scratch.
+
+Vehicles are quite plain at the moment, with them travelling from waypoint to waypoint and obeying signals of course. They also get reset on stalling for X seconds, but that's it. The vehicles can't go around other vehicles or obstacles right now. 
 Technically enabling Auto Repath and navigation quality on the navmesh agents on each vehicle will bring up some results, but at this point they'll open yet another rabbit hole. So that's a project idea for V2 may be! :D
+
+For vehicle models, I used Lowpoly Cars from Fun Assets [Link](https://assetstore.unity.com/packages/3d/vehicles/lowpoly-cars-amazing-car-pack-for-mobiles-194643)
+
+For the roads models, I used Low Poly Road Pack by Broken Vector [Link](https://assetstore.unity.com/packages/3d/environments/roadways/low-poly-road-pack-67288)
 
 NOTE: This turned out to be a bit of a rabbit hole itself and with the full-time work, personal commitments...and gaming, it got stretched in being almost a year long!
 
