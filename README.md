@@ -13,6 +13,8 @@ For the roads models, I used Low Poly Road Pack by Broken Vector [Link](https://
 
 NOTE: This turned out to be a bit of a rabbit hole itself and with the full-time work, personal commitments...and gaming, it got stretched in being almost a year long!
 
+Check out a sample video here: [https://youtu.be/ryMFXhX0pEA](https://youtu.be/ryMFXhX0pEA)
+
 # General Documentation
 
 ## Waypoint System
